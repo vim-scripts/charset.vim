@@ -1,0 +1,60 @@
+*charset.txt*   vim "charset" plugin        Last change: 2002 Feb 04
+
+
+                               CHARSET SETTING                  
+                                                   *charset-semiautodetection*
+
+This is documentation for a script that can set character set of a file read
+into vim, based on information (charset hint) in the file.
+
+Note that this may be overkill for you; vim can distinguish many encodings
+when |fileencodings| option is used; however, there are cases when it fails,
+because encodings use same bytes as characters - typical example is latin1 vs.
+latin2 vs. cp1250.
+
+As default, the plugin can determine encoding of html and xml files, and of
+text (.txt) files with certain hint (see below) on the last line. It is 
+relatively easy to extend it to other file types.
+
+GENERAL FILES                                                 *charset-hint*
+The canonical form of a hint is charset=<charset name> on some fixed
+(last, first, etc) line. It may share that line with other text, particulary
+with vim modelines; in case of those modelines, it should precede them (vim is
+otherwise confused as it tries to set charset as its option):
+
+/* charset=latin-2 vim: set sw=8 */
+
+Currently, the only files that use this by default are txt files. You can
+instruct vim to use this plugin for other file types by adding
+
+        :call ReloadWhenCharsetSet("$")
+
+into respective ftplugin file; the parameter of function is the line number
+that should be searched for charset hint. The "$" here stands for "last line".
+There may be also optional second parameter that is used as a regexp for
+charset template; see source for details of this.
+
+HTML AND OTHER SPECIAL FILES                            *charset-hint-html*
+Some special files  may have the information about charset already present
+in other way; e.g., for html files, there is the "meta charset" tag that
+should be used. You can add 
+
+        :call ReloadWhenHtmlCharsetSet(pattern, line, sflags)
+
+to other ftplugins, too; it jumps to line "line" and determines location of
+charset using search() with sflags used as flags. Better read source to
+understand. It is likely to change in next version, as it is really ugly.
+See source for examples of usage for html and xml files.
+
+MISCELLANEOUS                                   *charset-plugin-misc*
+The plugin contains no mappings and             *loaded_charset_plugin*
+You can prevent plugin from loading by 
+        :let loaded_charset_plugin=1
+in your .vimrc
+
+It is better (from standpoint of a purist) to have relevant definitions in
+ftplugin files; if you did this, you may set    *charset_calls_in_ftplugin*
+        :let charset_calls_in_ftplugin=1
+to prevent setting autocommands inside the plugin
+
+vim: set expandtab:

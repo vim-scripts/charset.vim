@@ -1,0 +1,7 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=199
+
+Some types of documents have their encoding written in them. This plugin makes this information accessible to vim and ensures that they are read in proper encoding.
+
+Also can be used for plain files in modeline-like way.
+
+Currently, xml and html files are recognized and the last line of .txt files is checked to find out encoding.
